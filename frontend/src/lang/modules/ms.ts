@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: 'Jalankan',
             create: 'Cipta',
             add: 'Tambah',
             save: 'Simpan',
@@ -230,7 +231,7 @@ const message = {
             paramComplexity:
                 'Ruangan ini tidak boleh bermula atau berakhir dengan aksara khas dan mesti terdiri daripada aksara rumi, nombor, "{0}" dengan panjang 6-128 aksara.',
             paramUrlAndPort: 'Ruangan ini mesti dalam format "http(s)://(nama domain/IP):(port)".',
-            nginxDoc: 'Ruangan ini mesti terdiri daripada aksara rumi, nombor, dan ".".',
+            nginxDoc: 'Ruangan ini mesti terdiri daripada aksara rumi, nombor, _, dan ".".',
             appName:
                 'Menyokong huruf kecil, nombor, -, dan _, panjang 2-30, dan tidak boleh bermula atau berakhir dengan - atau _',
             containerName:
@@ -608,7 +609,7 @@ const message = {
         model: {
             model: 'Model',
             create: 'Tambah Model',
-            create_helper: 'Tarik "{0}" dari Ollama.com',
+            create_helper: 'Tarik "{0}"',
             ollama_doc: 'Anda boleh melawat laman web rasmi Ollama untuk mencari dan menemui lebih banyak model.',
             container_conn_helper: 'Gunakan alamat ini untuk akses atau sambungan antara kontena',
             ollama_sync:
@@ -1251,6 +1252,7 @@ const message = {
         resource: 'Sumber',
         operate: 'Operasi',
         detail: {
+            ai: 'AI',
             groups: 'Kumpulan',
             hosts: 'Hos',
             apps: 'Aplikasi',
@@ -1505,8 +1507,8 @@ const message = {
         proxyDockerHelper:
             'Selaraskan konfigurasi pelayan proksi ke Docker, menyokong tarikan imej pelayan luar talian dan operasi lain',
         apiInterface: 'Aktifkan API',
-        apiInterfaceClose: 'Setelah ditutup, antara muka API tidak boleh diakses. Adakah anda mahu meneruskan?',
-        apiInterfaceHelper: 'Benarkan aplikasi pihak ketiga mengakses API.',
+        apiInterfaceClose: 'ntaramuka API tidak tersedia, fungsi aplikasi akan terhad. Adakah anda ingin meneruskan?',
+        apiInterfaceHelper: 'Menyokong akses antara muka API panel (fungsi ini perlu diaktifkan untuk aplikasi panel)',
         apiInterfaceAlert1:
             'Jangan aktifkan dalam persekitaran pengeluaran kerana ia mungkin meningkatkan risiko keselamatan pelayan.',
         apiInterfaceAlert2:
@@ -1826,7 +1828,7 @@ const message = {
         levelUpPro: 'Tingkatkan ke Pro',
         licenseSync: 'Penyegerakan Lesen',
         knowMorePro: 'Ketahui Lebih Lanjut',
-        closeAlert: 'Halaman semasa boleh ditutup dalam tetapan panel',
+        closeAlert: 'Halaman semasa boleh disembunyikan dalam tetapan panel',
         introduce: 'Pengenalan Ciri',
         waf: 'Menaik taraf ke versi profesional boleh menyediakan ciri seperti peta pencegahan, log, rekod blok, sekatan lokasi geografi, peraturan tersuai, halaman pencegahan tersuai, dan sebagainya.',
         tamper: 'Menaik taraf ke versi profesional boleh melindungi laman web daripada pengubahsuaian atau manipulasi tanpa kebenaran.',
@@ -1835,6 +1837,7 @@ const message = {
         monitor:
             'Tingkatkan ke versi profesional untuk melihat status masa nyata laman web, tren pelawat, sumber pelawat, log permintaan dan maklumat lain.',
         alert: 'Tingkatkan ke versi profesional untuk menerima maklumat amaran melalui SMS dan melihat log amaran, mengawal sepenuhnya pelbagai acara utama, dan memastikan operasi sistem bebas kerisauan.',
+        app: 'Tingkatkan ke versi profesional untuk menguruskan pelayan dan melihat ciri pemantauan melalui aplikasi mudah alih.',
     },
     clean: {
         scan: 'Mulakan imbasan',
@@ -2004,8 +2007,7 @@ const message = {
         pullImage: 'Tarik Imej',
         pullImageHelper: 'Laksanakan docker pull untuk menarik imej sebelum aplikasi dimulakan.',
         gpuConfig: 'Pecutan GPU',
-        gpuConfigHelper:
-            'Pastikan mesin mempunyai GPU NVIDIA dan pasang pemacu NVIDIA serta NVIDIA Docker Container Toolkit.',
+        gpuConfigHelper: 'Sila pastikan bahawa pelayan telah dipasang pemacu NVIDIA dan NVIDIA Container Toolkit',
     },
     website: {
         website: 'Laman Web | Laman Web',
@@ -2620,6 +2622,8 @@ const message = {
         proxyHelper4: 'Setelah selesai, anda boleh melihat dan mengurusnya dalam senarai laman web',
         proxyHelper5:
             'Selepas diaktifkan, anda boleh melumpuhkan akses luaran ke port dalam App Store - Dipasang - Ollama - Parameter untuk meningkatkan keselamatan.',
+        proxyHelper6: 'Untuk melumpuhkan konfigurasi proksi, anda boleh memadamnya dari senarai laman web.',
+        whiteListHelper: 'Hadkan akses kepada hanya IP dalam senarai putih',
     },
 };
 

@@ -103,6 +103,9 @@ func Init() {
 		migrations.UpdateAppTag,
 		migrations.UpdateApp,
 		migrations.AddOllamaModel,
+		migrations.AddAppMenu,
+		migrations.AddAppPanelName,
+		migrations.AddLicenseVerify,
 	})
 	if err := m.Migrate(); err != nil {
 		global.LOG.Error(err)
