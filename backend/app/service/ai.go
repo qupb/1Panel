@@ -3,12 +3,13 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/1Panel-dev/1Panel/backend/utils/common"
 	"io"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+
+	"github.com/1Panel-dev/1Panel/backend/utils/common"
 
 	"github.com/1Panel-dev/1Panel/backend/app/dto"
 	"github.com/1Panel-dev/1Panel/backend/app/dto/request"
@@ -27,6 +28,7 @@ type AIToolService struct{}
 type IAIToolService interface {
 	Search(search dto.SearchWithPage) (int64, []dto.OllamaModelInfo, error)
 	Create(name string) error
+	Close(name string) error
 	Recreate(name string) error
 	Delete(req dto.ForceDelete) error
 	Sync() ([]dto.OllamaModelDropList, error)
@@ -68,7 +70,7 @@ func (u *AIToolService) LoadDetail(name string) (string, error) {
 	if cmd.CheckIllegal(name) {
 		return "", buserr.New(constant.ErrCmdIllegal)
 	}
-	containerName, err := loadContainerName()
+	containerName, err := LoadContainerName()
 	if err != nil {
 		return "", err
 	}
@@ -87,7 +89,7 @@ func (u *AIToolService) Create(name string) error {
 	if modelInfo.ID != 0 {
 		return constant.ErrRecordExist
 	}
-	containerName, err := loadContainerName()
+	containerName, err := LoadContainerName()
 	if err != nil {
 		return err
 	}
@@ -113,6 +115,21 @@ func (u *AIToolService) Create(name string) error {
 	return nil
 }
 
+func (u *AIToolService) Close(name string) error {
+	if cmd.CheckIllegal(name) {
+		return buserr.New(constant.ErrCmdIllegal)
+	}
+	containerName, err := LoadContainerName()
+	if err != nil {
+		return err
+	}
+	stdout, err := cmd.Execf("docker exec %s ollama stop %s", containerName, name)
+	if err != nil {
+		return fmt.Errorf("handle ollama stop %s failed, stdout: %s, err: %v", name, stdout, err)
+	}
+	return nil
+}
+
 func (u *AIToolService) Recreate(name string) error {
 	if cmd.CheckIllegal(name) {
 		return buserr.New(constant.ErrCmdIllegal)
@@ -121,7 +138,7 @@ func (u *AIToolService) Recreate(name string) error {
 	if modelInfo.ID == 0 {
 		return constant.ErrRecordNotFound
 	}
-	containerName, err := loadContainerName()
+	containerName, err := LoadContainerName()
 	if err != nil {
 		return err
 	}
@@ -147,14 +164,16 @@ func (u *AIToolService) Delete(req dto.ForceDelete) error {
 	if len(ollamaList) == 0 {
 		return constant.ErrRecordNotFound
 	}
-	containerName, err := loadContainerName()
+	containerName, err := LoadContainerName()
 	if err != nil && !req.ForceDelete {
 		return err
 	}
 	for _, item := range ollamaList {
-		stdout, err := cmd.Execf("docker exec %s ollama rm %s", containerName, item.Name)
-		if err != nil && !req.ForceDelete {
-			return fmt.Errorf("handle ollama rm %s failed, stdout: %s, err: %v", item.Name, stdout, err)
+		if item.Status != constant.StatusDeleted {
+			stdout, err := cmd.Execf("docker exec %s ollama rm %s", containerName, item.Name)
+			if err != nil && !req.ForceDelete {
+				return fmt.Errorf("handle ollama rm %s failed, stdout: %s, err: %v", item.Name, stdout, err)
+			}
 		}
 		_ = aiRepo.Delete(commonRepo.WithByID(item.ID))
 		logItem := path.Join(global.CONF.System.DataDir, "log", "AITools", item.Name)
@@ -164,7 +183,7 @@ func (u *AIToolService) Delete(req dto.ForceDelete) error {
 }
 
 func (u *AIToolService) Sync() ([]dto.OllamaModelDropList, error) {
-	containerName, err := loadContainerName()
+	containerName, err := LoadContainerName()
 	if err != nil {
 		return nil, err
 	}
@@ -226,6 +245,15 @@ func (u *AIToolService) BindDomain(req dto.OllamaBindDomain) error {
 			return err
 		}
 	}
+	if req.SSLID > 0 {
+		ssl, err := websiteSSLRepo.GetFirst(commonRepo.WithByID(req.SSLID))
+		if err != nil {
+			return err
+		}
+		if ssl.Pem == "" {
+			return buserr.New("ErrSSL")
+		}
+	}
 	createWebsiteReq := request.WebsiteCreate{
 		PrimaryDomain: req.Domain,
 		Alias:         strings.ToLower(req.Domain),
@@ -278,6 +306,8 @@ func (u *AIToolService) GetBindDomain(req dto.OllamaBindDomainReq) (*dto.OllamaB
 	res.Domain = website.PrimaryDomain
 	if website.WebsiteSSLID > 0 {
 		res.SSLID = website.WebsiteSSLID
+		ssl, _ := websiteSSLRepo.GetFirst(commonRepo.WithByID(website.WebsiteSSLID))
+		res.AcmeAccountID = ssl.AcmeAccountID
 	}
 	res.ConnUrl = fmt.Sprintf("%s://%s", strings.ToLower(website.Protocol), website.PrimaryDomain)
 	res.AllowIPs = GetAllowIps(website)
@@ -297,6 +327,15 @@ func (u *AIToolService) UpdateBindDomain(req dto.OllamaBindDomain) error {
 		ipList, err = common.HandleIPList(req.IPList)
 		if err != nil {
 			return err
+		}
+	}
+	if req.SSLID > 0 {
+		ssl, err := websiteSSLRepo.GetFirst(commonRepo.WithByID(req.SSLID))
+		if err != nil {
+			return err
+		}
+		if ssl.Pem == "" {
+			return buserr.New("ErrSSL")
 		}
 	}
 	websiteService := NewIWebsiteService()
@@ -332,7 +371,7 @@ func (u *AIToolService) UpdateBindDomain(req dto.OllamaBindDomain) error {
 	return nil
 }
 
-func loadContainerName() (string, error) {
+func LoadContainerName() (string, error) {
 	ollamaBaseInfo, err := appInstallRepo.LoadBaseInfo("ollama", "")
 	if err != nil {
 		return "", fmt.Errorf("ollama service is not found, err: %v", err)

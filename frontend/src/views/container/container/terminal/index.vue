@@ -46,7 +46,7 @@
             </el-button>
             <el-button v-else @click="onClose()">{{ $t('commons.button.disconnect') }}</el-button>
             <Terminal
-                style="height: calc(100vh - 302px); margin-top: 18px"
+                style="height: calc(100vh - 312px); margin-top: 18px"
                 ref="terminalRef"
                 v-if="terminalOpen"
             ></Terminal>
@@ -99,7 +99,7 @@ const initTerm = (formEl: FormInstance | undefined) => {
         await nextTick();
         terminalRef.value!.acceptParams({
             endpoint: '/api/v1/containers/exec',
-            args: `containerid=${form.containerID}&user=${form.user}&command=${form.command}`,
+            args: `source=container&containerid=${form.containerID}&user=${form.user}&command=${form.command}`,
             error: '',
             initCmd: '',
         });

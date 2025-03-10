@@ -15,9 +15,9 @@
                     <template #title>
                         <span class="flx-align-center">
                             {{ $t('ai_tools.model.ollama_doc') }}
-                            <el-link class="ml-5" icon="Position" @click="goSearch()" type="primary">
+                            <el-button link class="ml-5" icon="Position" @click="goSearch()" type="primary">
                                 {{ $t('firewall.quickJump') }}
-                            </el-link>
+                            </el-button>
                         </span>
                     </template>
                 </el-alert>
@@ -79,7 +79,7 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         await createOllamaModel(itemName);
         drawerVisible.value = false;
         emit('search');
-        emit('log', itemName);
+        emit('log', { logFileExist: true, name: itemName, from: 'local' });
         MsgSuccess(i18n.global.t('commons.msg.operationSuccess'));
     });
 };

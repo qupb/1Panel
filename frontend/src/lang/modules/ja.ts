@@ -14,6 +14,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: '実行',
             create: '作成する',
             add: '追加',
             save: '保存',
@@ -224,7 +225,7 @@ const message = {
             paramComplexity: `このフィールドは、特殊文字で開始および終了する必要はなく、英語、数字「{0}」文字で構成されている必要があります。`,
             paramUrlAndPort:
                 'このフィールドは、「http（s）://（domain name/ip）:(ポート）」の形式でなければなりません。',
-            nginxDoc: 'このフィールドは、英語、数字、「」で構成されている必要があります。文字。',
+            nginxDoc: 'このフィールドは、英語、数字、_、「」で構成されている必要があります。文字。',
             appName:
                 '小文字の英字、数字、-および_をサポートし、長さは2〜30で、-または_で始まったり終わったりすることはできません',
             containerName: '文字、数字、 - 、_および。;-  _または。で始めることはできません。長さ:2-128',
@@ -597,7 +598,7 @@ const message = {
         model: {
             model: 'モデル',
             create: 'モデルを追加',
-            create_helper: 'Ollama.com から "{0}" を取得',
+            create_helper: 'を取得 "{0}"',
             ollama_doc: 'Ollama の公式ウェブサイトを訪れて、さらに多くのモデルを検索して見つけることができます。',
             container_conn_helper: 'コンテナ間のアクセスまたは接続にこのアドレスを使用',
             ollama_sync: 'Ollamaモデルの同期中に、以下のモデルが存在しないことが判明しました。削除しますか？',
@@ -1209,6 +1210,7 @@ const message = {
         resource: 'リソース',
         operate: '動作します',
         detail: {
+            ai: 'AI',
             groups: 'グループ',
             hosts: 'ホスト',
             apps: 'アプリ',
@@ -1462,8 +1464,9 @@ const message = {
         proxyDockerHelper:
             'プロキシサーバーの構成をDockerに同期し、オフラインサーバーイメージの引っ張りやその他の操作をサポートします',
         apiInterface: 'APIを有効にします',
-        apiInterfaceClose: '閉じたら、APIインターフェイスにアクセスできません。続けたいですか？',
-        apiInterfaceHelper: 'サードパーティのアプリケーションにAPIにアクセスできるようにします。',
+        apiInterfaceClose: 'APIインターフェースが利用できません。アプリ機能が制限されます。続行しますか？',
+        apiInterfaceHelper:
+            'パネルAPIインターフェースアクセスをサポート（この機能はパネルアプリで有効にする必要があります）',
         apiInterfaceAlert1: `サーバーのセキュリティリスクが増加する可能性があるため、生産環境で有効にしないでください。`,
         apiInterfaceAlert2: `サードパーティのアプリケーションを使用してAPIを呼び出して、潜在的なセキュリティの脅威を防止しないでください。`,
         apiInterfaceAlert3: 'APIドキュメント',
@@ -1770,7 +1773,7 @@ const message = {
         levelUpPro: 'Proにアップグレードします',
         licenseSync: 'ライセンス同期',
         knowMorePro: 'もっと詳しく知る',
-        closeAlert: '現在のページはパネル設定で閉じることができます',
+        closeAlert: '現在のページはパネル設定で非表示にできます',
         introduce: '機能の紹介',
         waf: 'プロフェッショナルバージョンにアップグレードすると、インターセプトマップ、ログ、ブロックレコード、地理的位置ブロッキング、カスタムルール、カスタムインターセプトページなどの機能を提供できます。',
         tamper: 'プロのバージョンにアップグレードすると、不正な変更や改ざんからWebサイトを保護できます。',
@@ -1778,7 +1781,8 @@ const message = {
             'プロのバージョンにアップグレードすることで、パネルロゴ、ウェルカムメッセージ、その他の情報のカスタマイズが可能になります。',
         monitor:
             'プロのバージョンにアップグレードして、Webサイトのリアルタイムステータス、訪問者の傾向、訪問者ソース、リクエストログ、その他の情報を表示します。',
-        alert: 'プロのバージョンにアップグレードして、SMSを介してアラーム情報を受信し、アラームログを表示し、さまざまなキーイベントを完全に制御し、心配のないシステム操作を確実にする',
+        alert: 'プロのバージョンにアップグレードして、SMSを介してアラーム情報を受信し、アラームログを表示し、さまざまなキーイベントを完全に制御し、心配のないシステム操作を確実にする。',
+        app: 'プロ版にアップグレードすると、モバイルアプリを使ってサーバーを管理し、監視機能を確認できます。',
     },
     clean: {
         scan: 'スキャンを開始します',
@@ -1953,7 +1957,7 @@ const message = {
         pullImageHelper: 'アプリケーションが開始する前に、Docker Pullを実行して画像をプルします',
         gpuConfig: 'GPU アクセラレーション',
         gpuConfigHelper:
-            'マシンにNVIDIA GPUが搭載されていることを確認し、NVIDIAドライバーとNVIDIA Docker Container Toolkitをインストールしてください。',
+            'サーバーにNVIDIAドライバーとNVIDIA Container Toolkitがインストールされていることを確認してください',
     },
     website: {
         website: 'ウェブサイト|ウェブサイト',
@@ -2559,6 +2563,8 @@ const message = {
         proxyHelper4: '作成後、ウェブサイトリストで確認および管理できます',
         proxyHelper5:
             '有効にすると、アプリストア - インストール済み - Ollama - パラメータでポートの外部アクセスを無効にし、セキュリティを向上させることができます。',
+        proxyHelper6: 'プロキシ設定を無効にするには、ウェブサイトリストから削除できます。',
+        whiteListHelper: 'ホワイトリスト内のIPのみアクセスを許可する',
     },
 };
 export default {
