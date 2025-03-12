@@ -563,7 +563,7 @@ const message = {
         restartNowHelper: '修改配置后需要重启生效。',
 
         persistence: '持久化',
-        rdbHelper1: '秒內,插入',
+        rdbHelper1: '秒内,插入',
         rdbHelper2: '条数据',
         rdbHelper3: '符合任意一个条件将会触发RDB持久化',
         rdbInfo: '请确认规则列表中值在 1-100000 之间',
