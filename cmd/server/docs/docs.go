@@ -156,7 +156,51 @@ const docTemplate = `{
                         "name"
                     ],
                     "formatEN": "add Ollama model [name]",
-                    "formatZH": "添加模型 [name]",
+                    "formatZH": "添加 Ollama 模型 [name]",
+                    "paramKeys": []
+                }
+            }
+        },
+        "/ai/ollama/model/close": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "Timestamp": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI"
+                ],
+                "summary": "Close Ollama model conn",
+                "parameters": [
+                    {
+                        "description": "request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OllamaModelName"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-panel-log": {
+                    "BeforeFunctions": [],
+                    "bodyKeys": [
+                        "name"
+                    ],
+                    "formatEN": "close conn for Ollama model [name]",
+                    "formatZH": "关闭 Ollama 模型连接 [name]",
                     "paramKeys": []
                 }
             }
@@ -199,17 +243,17 @@ const docTemplate = `{
                         {
                             "db": "ollama_models",
                             "input_column": "id",
-                            "input_value": "id",
-                            "isList": false,
+                            "input_value": "ids",
+                            "isList": true,
                             "output_column": "name",
-                            "output_value": "name"
+                            "output_value": "names"
                         }
                     ],
                     "bodyKeys": [
-                        "id"
+                        "ids"
                     ],
-                    "formatEN": "remove ollama model [name]",
-                    "formatZH": "删除 ollama 模型 [name]",
+                    "formatEN": "remove Ollama model [names]",
+                    "formatZH": "删除 Ollama 模型 [names]",
                     "paramKeys": []
                 }
             }
@@ -291,7 +335,7 @@ const docTemplate = `{
                         "name"
                     ],
                     "formatEN": "re-add Ollama model [name]",
-                    "formatZH": "添加模型重试 [name]",
+                    "formatZH": "添加 Ollama 模型重试 [name]",
                     "paramKeys": []
                 }
             }
@@ -3439,7 +3483,7 @@ const docTemplate = `{
                 "summary": "Container stats",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "container id",
                         "name": "id",
                         "in": "path",
@@ -19338,6 +19382,9 @@ const docTemplate = `{
         "dto.ForwardRuleOperate": {
             "type": "object",
             "properties": {
+                "forceDelete": {
+                    "type": "boolean"
+                },
                 "rules": {
                     "type": "array",
                     "items": {
@@ -20633,16 +20680,13 @@ const docTemplate = `{
                 "domain"
             ],
             "properties": {
-                "allowIPs": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "appInstallID": {
                     "type": "integer"
                 },
                 "domain": {
+                    "type": "string"
+                },
+                "ipList": {
                     "type": "string"
                 },
                 "sslID": {
@@ -20667,11 +20711,17 @@ const docTemplate = `{
         "dto.OllamaBindDomainRes": {
             "type": "object",
             "properties": {
+                "acmeAccountID": {
+                    "type": "integer"
+                },
                 "allowIPs": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "connUrl": {
+                    "type": "string"
                 },
                 "domain": {
                     "type": "string"
@@ -26677,7 +26727,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "ApiKeyAuth": {
-            "description": "- ` + "`" + `1Panel-Token` + "`" + ` is the key for the panel API Key.",
+            "description": "Custom Token Format, Format: md5('1panel' + API-Key + UnixTimestamp).\n` + "`" + `` + "`" + `` + "`" + `\neg:\ncurl -X GET \"http://localhost:4004/api/v1/dashboard/current\" \\\n-H \"1Panel-Token: \u003c1panel_token\u003e\" \\\n-H \"1Panel-Timestamp: \u003ccurrent_unix_timestamp\u003e\"\n` + "`" + `` + "`" + `` + "`" + `\n- ` + "`" + `1Panel-Token` + "`" + ` is the key for the panel API Key.",
             "type": "apiKey",
             "name": "1Panel-Token",
             "in": "header"

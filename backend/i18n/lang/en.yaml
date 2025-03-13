@@ -287,3 +287,9 @@ SystemMode: "mode: "
 
 #ai-tool
 ErrOpenrestyInstall: 'Please install Openresty first'
+ErrSSL: "Certificate content is empty, please check the certificate!"
+
+#mobile app
+ErrVerifyToken: 'Token verification error, please reset and scan again.'
+ErrInvalidToken: 'Invalid token, please reset and scan again.'
+ErrExpiredToken: 'Token has expired, please reset and scan again.'

@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: 'Executar',
             create: 'Criar',
             add: 'Adicionar',
             save: 'Salvar',
@@ -228,7 +229,7 @@ const message = {
             paramComplexity:
                 'Este campo não deve começar ou terminar com caracteres especiais e deve conter letras, números e "{0}" com comprimento de 6-128.',
             paramUrlAndPort: 'Este campo deve estar no formato "http(s)://(nome do domínio/IP):(porta)".',
-            nginxDoc: 'Este campo deve conter letras, números e ".".',
+            nginxDoc: 'Este campo deve conter letras, _, números e ".".',
             appName:
                 'Suporta letras minúsculas, números, - e _, comprimento de 2 a 30, e não pode começar ou terminar com - ou _',
             containerName:
@@ -605,7 +606,7 @@ const message = {
         model: {
             model: 'Modelo',
             create: 'Adicionar Modelo',
-            create_helper: 'Puxar "{0}" do Ollama.com',
+            create_helper: 'Puxar "{0}"',
             ollama_doc: 'Você pode visitar o site oficial da Ollama para pesquisar e encontrar mais modelos.',
             container_conn_helper: 'Use este endereço para acesso ou conexão entre contêineres',
             ollama_sync:
@@ -1236,6 +1237,7 @@ const message = {
         resource: 'Recurso',
         operate: 'Operar',
         detail: {
+            ai: 'AI',
             groups: 'Grupo',
             hosts: 'Host',
             apps: 'Aplicativo',
@@ -1492,8 +1494,10 @@ const message = {
         proxyDockerHelper:
             'Sincronize a configuração do servidor proxy com o Docker, suportando operações de puxar imagens de servidor offline e outras',
         apiInterface: 'Habilitar API',
-        apiInterfaceClose: 'Uma vez fechado, as interfaces da API não poderão ser acessadas. Deseja continuar?',
-        apiInterfaceHelper: 'Permitir que aplicativos de terceiros acessem a API.',
+        apiInterfaceClose:
+            'As interfaces de API estão indisponíveis, a funcionalidade do aplicativo será restrita. Deseja continuar?',
+        apiInterfaceHelper:
+            'Suporta acesso à interface de API do painel (essa funcionalidade precisa ser ativada no aplicativo do painel)',
         apiInterfaceAlert1:
             'Não habilite em ambientes de produção, pois pode aumentar os riscos de segurança do servidor.',
         apiInterfaceAlert2:
@@ -1813,7 +1817,7 @@ const message = {
         levelUpPro: 'Upgrade para Pro',
         licenseSync: 'Sincronização de Licença',
         knowMorePro: 'Saiba mais',
-        closeAlert: 'A página atual pode ser fechada nas configurações do painel',
+        closeAlert: 'A página atual pode ser oculta nas configurações do painel',
         introduce: 'Introdução de recursos',
         waf: 'O upgrade para a versão profissional pode fornecer recursos como mapa de intercepção, logs, registros de bloqueio, bloqueio por localização geográfica, regras personalizadas, páginas de intercepção personalizadas, etc.',
         tamper: 'O upgrade para a versão profissional pode proteger sites contra modificações ou adulterações não autorizadas.',
@@ -1822,6 +1826,7 @@ const message = {
         monitor:
             'Upgrade para a versão profissional para visualizar o status em tempo real do site, tendências de visitantes, fontes de visitantes, logs de solicitações e outras informações.',
         alert: 'Upgrade para a versão profissional para receber informações de alarme via SMS e visualizar logs de alarmes, controlar completamente vários eventos chave e garantir a operação sem preocupações do sistema',
+        app: 'Atualize para a versão profissional para gerenciar servidores e visualizar recursos de monitoramento via o aplicativo móvel.',
     },
     clean: {
         scan: 'Iniciar escaneamento',
@@ -1996,7 +2001,7 @@ const message = {
         pullImageHelper: 'Execute o comando docker pull para puxar a imagem antes de iniciar o aplicativo',
         gpuConfig: 'Aceleração de GPU',
         gpuConfigHelper:
-            'Certifique-se de que a máquina possui uma GPU NVIDIA e instale os drivers NVIDIA e o NVIDIA Docker Container Toolkit.',
+            'Por favor, certifique-se de que o servidor tenha os drivers NVIDIA e o NVIDIA Container Toolkit instalados',
     },
     website: {
         website: 'Website | Websites',
@@ -2614,6 +2619,8 @@ const message = {
         proxyHelper2: 'Limite o acesso por IP para evitar exposição na internet pública',
         proxyHelper3: 'Habilite a transmissão em fluxo',
         proxyHelper4: 'Após a criação, você pode visualizar e gerenciar no lista de sites',
+        proxyHelper6: 'Para desativar a configuração de proxy, você pode excluí-la da lista de sites.',
+        whiteListHelper: 'Restringir o acesso apenas aos IPs na lista branca',
     },
 };
 

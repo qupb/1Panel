@@ -20,11 +20,21 @@
                     ref="appStatusRef"
                 ></AppStatus>
             </template>
+            <template #prompt>
+                <el-alert type="info" :closable="false">
+                    <template #title>
+                        <span>{{ $t('runtime.systemRestartHelper') }}</span>
+                    </template>
+                </el-alert>
+            </template>
             <template #toolbar v-if="modelInfo.isExist">
                 <div class="flex justify-between gap-2 flex-wrap sm:flex-row">
                     <div class="flex flex-wrap gap-3">
                         <el-button :disabled="modelInfo.status !== 'Running'" type="primary" @click="onCreate()">
                             {{ $t('ai_tools.model.create') }}
+                        </el-button>
+                        <el-button plain type="primary" :disabled="modelInfo.status !== 'Running'" @click="bindDomain">
+                            {{ $t('aitool.proxy') }}
                         </el-button>
                         <el-button :disabled="modelInfo.status !== 'Running'" @click="onLoadConn" type="primary" plain>
                             {{ $t('database.databaseConnInfo') }}
@@ -41,9 +51,7 @@
                         >
                             OpenWebUI
                         </el-button>
-                        <el-button plain type="primary" :disabled="modelInfo.status !== 'Running'" @click="bindDomain">
-                            {{ $t('aitool.proxy') }}
-                        </el-button>
+
                         <el-button plain :disabled="selects.length === 0" type="primary" @click="onDelete(null)">
                             {{ $t('commons.button.delete') }}
                         </el-button>
@@ -84,6 +92,9 @@
                             <el-tag v-if="row.status === 'Deleted'" type="info">
                                 {{ $t('database.isDelete') }}
                             </el-tag>
+                            <el-tag v-if="row.status === 'Canceled'" type="danger">
+                                {{ $t('commons.status.systemrestart') }}
+                            </el-tag>
                             <el-tag v-if="row.status === 'Failed'" type="danger">
                                 {{ $t('commons.status.failed') }}
                             </el-tag>
@@ -103,14 +114,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        min-width="100"
-                        :label="$t('commons.table.createdAt')"
+                        min-width="80"
+                        :label="$t('commons.table.date')"
                         prop="createdAt"
                         :formatter="dateFormat"
                     />
                     <fu-table-operations
                         :ellipsis="mobile ? 0 : 10"
-                        :min-width="mobile ? 'auto' : 100"
+                        :min-width="mobile ? 'auto' : 200"
                         :buttons="buttons"
                         :label="$t('commons.table.operate')"
                         fixed="right"
@@ -161,6 +172,7 @@
         <AddDialog ref="addRef" @search="search" @log="onLoadLog" />
         <Log ref="logRef" @close="search" />
         <Del ref="delRef" @search="search" />
+        <Terminal ref="terminalRef" />
         <Conn ref="connRef" />
         <CodemirrorDialog ref="detailRef" />
         <PortJumpDialog ref="dialogPortJumpRef" />
@@ -172,6 +184,7 @@
 import AppStatus from '@/components/app-status/index.vue';
 import AddDialog from '@/views/ai/model/add/index.vue';
 import Conn from '@/views/ai/model/conn/index.vue';
+import Terminal from '@/views/ai/model/terminal/index.vue';
 import Del from '@/views/ai/model/del/index.vue';
 import Log from '@/components/log-dialog/index.vue';
 import PortJumpDialog from '@/components/port-jump/index.vue';
@@ -203,6 +216,7 @@ const logRef = ref();
 const detailRef = ref();
 const delRef = ref();
 const connRef = ref();
+const terminalRef = ref();
 const openWebUIPort = ref();
 const dashboardVisible = ref(false);
 const dialogPortJumpRef = ref();
@@ -379,7 +393,7 @@ const onDelete = async (row: AI.OllamaModelInfo) => {
     });
 };
 
-const onLoadLog = (row: AI.OllamaModelInfo) => {
+const onLoadLog = (row: any) => {
     if (row.from === 'remote') {
         MsgInfo(i18n.global.t('ai_tools.model.from_remote'));
         return;
@@ -392,6 +406,15 @@ const onLoadLog = (row: AI.OllamaModelInfo) => {
 };
 
 const buttons = [
+    {
+        label: i18n.global.t('commons.button.run'),
+        click: (row: AI.OllamaModelInfo) => {
+            terminalRef.value.acceptParams({ name: row.name });
+        },
+        disabled: (row: any) => {
+            return row.status !== 'Success';
+        },
+    },
     {
         label: i18n.global.t('commons.button.retry'),
         click: (row: AI.OllamaModelInfo) => {
@@ -407,7 +430,7 @@ const buttons = [
             onDelete(row);
         },
         disabled: (row: any) => {
-            return row.status !== 'Success';
+            return row.status === 'Waiting';
         },
     },
 ];

@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: '실행',
             create: '생성',
             add: '추가',
             save: '저장',
@@ -224,7 +225,7 @@ const message = {
             paramComplexity:
                 '이 필드는 특수 문자로 시작하거나 끝날 수 없으며, 영어, 숫자, "{0}" 문자로 구성되어야 하며 길이는 6-128 자여야 합니다.',
             paramUrlAndPort: '이 필드는 "http(s)://(도메인 이름/IP):(포트)" 형식이어야 합니다.',
-            nginxDoc: '이 필드는 영어, 숫자 및 "." 문자로 구성되어야 합니다.',
+            nginxDoc: '이 필드는 영어, 숫자 및 _ "." 문자로 구성되어야 합니다.',
             appName:
                 '소문자, 숫자, "-", "_"를 지원하며 길이는 2-30 자이고, "-" 또는 "_"로 시작하거나 끝날 수 없습니다.',
             containerName:
@@ -593,7 +594,7 @@ const message = {
         model: {
             model: '모델',
             create: '모델 추가',
-            create_helper: 'Ollama.com에서 "{0}" 가져오기',
+            create_helper: '가져오기 "{0}"',
             ollama_doc: 'Ollama 공식 웹사이트를 방문하여 더 많은 모델을 검색하고 찾을 수 있습니다.',
             container_conn_helper: '컨테이너 간 접근 또는 연결에 이 주소를 사용',
             ollama_sync: 'Ollama 모델 동기화 중 다음 모델이 존재하지 않음을 발견했습니다. 삭제하시겠습니까?',
@@ -1196,6 +1197,7 @@ const message = {
         resource: '자원',
         operate: '작업',
         detail: {
+            ai: 'AI',
             groups: '그룹',
             hosts: '호스트',
             apps: '애플리케이션',
@@ -1444,10 +1446,10 @@ const message = {
         proxyDockerHelper:
             '프록시 서버 구성을 Docker 에 동기화하여 오프라인 서버 이미지 가져오기 등의 작업을 지원합니다.',
         apiInterface: 'API 활성화',
-        apiInterfaceClose: '비활성화하면 API 인터페이스에 접근할 수 없습니다. 계속하시겠습니까?',
-        apiInterfaceHelper: '서드파티 애플리케이션이 API 에 접근할 수 있도록 허용합니다.',
+        apiInterfaceClose: 'API 인터페이스를 사용할 수 없습니다. 앱 기능이 제한됩니다. 계속하시겠습니까?',
+        apiInterfaceHelper: '패널 API 인터페이스 액세스를 지원합니다(패널 앱에서 이 기능을 활성화해야 합니다)',
         apiInterfaceAlert1: '운영 환경에서는 활성화하지 마십시오. 서버 보안 위험이 증가할 수 있습니다.',
-        apiInterfaceAlert2: '잠재적인 보안 위협을 방지하기 위해 서드파티 애플리케이션으로 API를 호출하지 마십시오.',
+        apiInterfaceAlert2: '잠재적인 보안 위협을 방지하기 위해 서드파티 애플리케이션으로 API 를 호출하지 마십시오.',
         apiInterfaceAlert3: 'API 문서',
         apiInterfaceAlert4: '사용 설명서',
         apiKey: 'API 키',
@@ -1741,7 +1743,7 @@ const message = {
         levelUpPro: 'Pro 로 업그레이드',
         licenseSync: '라이센스 동기화',
         knowMorePro: '더 알아보기',
-        closeAlert: '현재 페이지는 패널 설정에서 닫을 수 있습니다.',
+        closeAlert: '현재 페이지는 패널 설정에서 숨길 수 있습니다',
         introduce: '기능 소개',
         waf: '전문 버전으로 업그레이드하면 차단 맵, 로그, 차단 기록, 지리적 위치 차단, 사용자 정의 규칙, 사용자 정의 차단 페이지 등의 기능을 제공받을 수 있습니다.',
         tamper: '전문 버전으로 업그레이드하면 웹사이트를 무단 수정이나 변조로부터 보호할 수 있습니다.',
@@ -1749,6 +1751,7 @@ const message = {
         monitor:
             '전문 버전으로 업그레이드하면 웹사이트의 실시간 상태, 방문자 트렌드, 방문자 출처, 요청 로그 등 정보를 확인할 수 있습니다.',
         alert: '전문 버전으로 업그레이드하면 SMS 를 통해 알림 정보를 받고 알림 로그를 볼 수 있으며, 다양한 주요 이벤트를 완벽하게 제어하여 시스템 운영을 걱정 없이 유지할 수 있습니다.',
+        app: '전문 버전으로 업그레이드하면 모바일 앱을 통해 서버를 관리하고 모니터링 기능을 확인할 수 있습니다.',
     },
     clean: {
         scan: '스캔 시작',
@@ -1920,8 +1923,7 @@ const message = {
         pullImage: '이미지 풀',
         pullImageHelper: '애플리케이션 시작 전에 docker pull 을 실행하여 이미지를 다운로드하세요.',
         gpuConfig: 'GPU 가속',
-        gpuConfigHelper:
-            '기계에 NVIDIA GPU가 설치되어 있고 NVIDIA 드라이버와 NVIDIA Docker Container Toolkit이 설치되어 있는지 확인하십시오.',
+        gpuConfigHelper: '서버에 NVIDIA 드라이버와 NVIDIA Container Toolkit이 설치되어 있는지 확인하십시오',
     },
     website: {
         website: '웹사이트 | 웹사이트들',
@@ -2521,6 +2523,8 @@ const message = {
         proxyHelper4: '생성 후, 웹사이트 목록에서 이를 보고 관리할 수 있습니다',
         proxyHelper5:
             '활성화한 후, 앱 스토어 - 설치됨 - Ollama - 매개변수에서 포트 외부 접근을 비활성화하여 보안을 강화할 수 있습니다.',
+        proxyHelper6: '프록시 구성을 비활성화하려면 웹사이트 목록에서 삭제할 수 있습니다.',
+        whiteListHelper: '화이트리스트에 있는 IP만 접근 허용',
     },
 };
 

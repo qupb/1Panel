@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: 'Run',
             create: 'Create ',
             add: 'Add ',
             save: 'Save ',
@@ -225,7 +226,7 @@ const message = {
                 'This field must consist of English, numbers, ".", "-", and "_" characters with a length of 2-30.',
             paramComplexity: `This field mustn't start and end with special characters and must consist of English, numbers, "{0}" characters with a length of 6-128.`,
             paramUrlAndPort: 'This field must be in the format of "http(s)://(domain name/ip):(port)".',
-            nginxDoc: 'This field must consist of English, numbers and "." characters.',
+            nginxDoc: 'This field must consist of English, numbers, _ and "." characters.',
             appName: 'Supports lowercase letters, numbers, -, and _, length 2-30, and cannot start or end with - or _',
             containerName: 'Supports letters, numbers, -, _ and .; cannot start with - _ or .; length: 2-128',
             mirror: 'The mirror acceleration address should start with http(s)://, support English letters (both uppercase and lowercase), numbers, . / and -, and should not contain blank lines.',
@@ -597,7 +598,7 @@ const message = {
         model: {
             model: 'Model',
             create: 'Add Model',
-            create_helper: 'Pull "{0}" from Ollama.com',
+            create_helper: 'Pull "{0}"',
             ollama_doc: 'You can visit the Ollama official website to search and find more models.',
             container_conn_helper: 'Use this address for inter-container access or connection',
             ollama_sync: 'Syncing Ollama model found the following models do not exist, do you want to delete them?',
@@ -1229,6 +1230,7 @@ const message = {
         resource: 'Resource',
         operate: 'Operate',
         detail: {
+            ai: 'AI',
             groups: 'Group',
             hosts: 'Host',
             apps: 'App',
@@ -1486,8 +1488,9 @@ const message = {
         proxyDockerHelper:
             'Synchronize proxy server configuration to Docker, support offline server image pulling and other operations',
         apiInterface: 'Enable API',
-        apiInterfaceClose: 'Once closed, API interfaces cannot be accessed. Do you want to continue?',
-        apiInterfaceHelper: 'Allow third-party applications to access the API.',
+        apiInterfaceClose:
+            'API interfaces are unavailable, app functionality will be restricted. Do you want to continue?',
+        apiInterfaceHelper: 'Supports panel API interface access (this feature needs to be enabled for the panel app)',
         apiInterfaceAlert1: `Don't enable it in production environments because it may increase server security risks.`,
         apiInterfaceAlert2: `Don't use third-party applications to call the API to prevent potential security threats.`,
         apiInterfaceAlert3: 'API Docs',
@@ -1797,7 +1800,7 @@ const message = {
         levelUpPro: 'Upgrade to Pro',
         licenseSync: 'License Sync',
         knowMorePro: 'Learn More',
-        closeAlert: 'The current page can be closed in the panel settings',
+        closeAlert: 'The current page can be hidden in the panel settings',
         introduce: 'Feature Introduction',
         waf: 'Upgrading to the professional version can provide features such as interception map, logs, block records, geographical location blocking, custom rules, custom interception pages, etc.',
         tamper: 'Upgrading to the professional version can protect websites from unauthorized modifications or tampering.',
@@ -1806,6 +1809,7 @@ const message = {
         monitor:
             'Upgrade to the professional version to view the real-time status of the website, visitor trends, visitor sources, request logs and other information. ',
         alert: 'Upgrade to the professional version to receive alarm information via SMS and view alarm logs, fully control various key events, and ensure worry-free system operation',
+        app: 'Upgrade to the professional version to manage servers and view monitoring features via the mobile app.',
     },
     clean: {
         scan: 'Start scanning',
@@ -1979,8 +1983,7 @@ const message = {
         pullImage: 'Pull Image',
         pullImageHelper: 'Execute docker pull to pull the image before the application starts',
         gpuConfig: 'GPU Acceleration',
-        gpuConfigHelper:
-            'Please ensure the machine has an NVIDIA GPU and that NVIDIA drivers and the NVIDIA Docker Container Toolkit are installed',
+        gpuConfigHelper: 'Please ensure that the server has NVIDIA drivers and NVIDIA Container Toolkit installed',
     },
     website: {
         website: 'Website | Websites',
@@ -2591,6 +2594,8 @@ const message = {
         proxyHelper4: 'Once created, you can view and manage it in the website list',
         proxyHelper5:
             'After enabling, you can disable external access to the port in the App Store - Installed - Ollama - Parameters to improve security.',
+        proxyHelper6: 'To disable proxy configuration, you can delete it from the website list.',
+        whiteListHelper: 'Restrict access to only IPs in the whitelist',
     },
 };
 

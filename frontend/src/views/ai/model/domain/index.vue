@@ -27,8 +27,19 @@
                             <span class="input-help">
                                 {{ $t('aitool.proxyHelper4') }}
                             </span>
+                            <span class="input-help">
+                                {{ $t('aitool.proxyHelper6') }}
+                                <el-link
+                                    class="pageRoute"
+                                    icon="Position"
+                                    @click="toWebsite(req.websiteID)"
+                                    type="primary"
+                                >
+                                    {{ $t('firewall.quickJump') }}
+                                </el-link>
+                            </span>
                         </el-form-item>
-                        <el-form-item :label="$t('firewall.address')" prop="ipList">
+                        <el-form-item :label="$t('xpack.waf.whiteList') + ' IP'" prop="ipList">
                             <el-input
                                 :rows="3"
                                 type="textarea"
@@ -36,6 +47,9 @@
                                 v-model="req.ipList"
                                 :placeholder="$t('xpack.waf.ipGroupHelper')"
                             />
+                            <span class="input-help">
+                                {{ $t('aitool.whiteListHelper') }}
+                            </span>
                         </el-form-item>
                         <el-form-item>
                             <el-checkbox v-model="req.enableSSL" @change="changeSSL">
@@ -52,6 +66,7 @@
                                 :placeholder="$t('website.selectAcme')"
                                 @change="listSSL"
                             >
+                                <el-option :key="0" :label="$t('website.imported')" :value="0"></el-option>
                                 <el-option
                                     v-for="(acme, index) in acmeAccounts"
                                     :key="index"
@@ -65,12 +80,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item
-                            :label="$t('website.ssl')"
-                            prop="sslID"
-                            :hide-required-asterisk="true"
-                            v-if="req.enableSSL"
-                        >
+                        <el-form-item :label="$t('website.ssl')" prop="sslID" v-if="req.enableSSL">
                             <el-select
                                 v-model="req.sslID"
                                 :placeholder="$t('website.selectSSL')"
@@ -86,6 +96,9 @@
                         </el-form-item>
                         <el-alert :closable="false">
                             {{ $t('aitool.proxyHelper5') }}
+                            <el-link class="pageRoute" icon="Position" @click="toInstalled()" type="primary">
+                                {{ $t('firewall.quickJump') }}
+                            </el-link>
                         </el-alert>
                     </el-col>
                 </el-row>
@@ -122,7 +135,7 @@ const acmeAccounts = ref();
 const formRef = ref();
 const req = ref({
     domain: '',
-    sslID: 0,
+    sslID: undefined,
     ipList: '',
     acmeAccountID: 0,
     enableSSL: false,
@@ -132,6 +145,7 @@ const req = ref({
 });
 const rules = reactive<FormRules>({
     domain: [Rules.domainWithPort],
+    sslID: [Rules.requiredSelectBusiness],
 });
 const emit = defineEmits(['search']);
 
@@ -155,7 +169,7 @@ const changeSSl = (sslid: number) => {
 
 const changeSSL = () => {
     if (!req.value.enableSSL) {
-        req.value.sslID = 0;
+        req.value.sslID = undefined;
     } else {
         listAcmeAccount();
     }
@@ -180,7 +194,7 @@ const listSSL = () => {
             }
             changeSSl(req.value.sslID);
         } else {
-            req.value.sslID = 0;
+            req.value.sslID = undefined;
         }
     });
 };
@@ -188,10 +202,7 @@ const listSSL = () => {
 const listAcmeAccount = () => {
     SearchAcmeAccount({ page: 1, pageSize: 100 }).then((res) => {
         acmeAccounts.value = res.data.items || [];
-        if (acmeAccounts.value.length > 0) {
-            req.value.acmeAccountID = acmeAccounts.value[0].id;
-            listSSL();
-        }
+        listSSL();
     });
 };
 
@@ -218,19 +229,39 @@ const search = async (appInstallID: number) => {
             operate.value = 'update';
             req.value.domain = res.data.domain;
             req.value.websiteID = res.data.websiteID;
-            if (res.data.allowIPs.length > 0) {
+            if (res.data.allowIPs && res.data.allowIPs.length > 0) {
                 req.value.ipList = res.data.allowIPs.join('\n');
             }
             if (res.data.sslID > 0) {
                 req.value.enableSSL = true;
                 req.value.sslID = res.data.sslID;
-                listSSL();
+                req.value.acmeAccountID = res.data.acmeAccountID;
+                listAcmeAccount();
             }
         }
     } catch (e) {}
+};
+
+const toWebsite = (websiteID: number) => {
+    if (websiteID != undefined && websiteID > 0) {
+        window.location.href = `/websites/${websiteID}/config/basic`;
+    } else {
+        window.location.href = '/websites';
+    }
+};
+
+const toInstalled = () => {
+    window.location.href = '/apps/installed';
 };
 
 defineExpose({
     acceptParams,
 });
 </script>
+
+<style lang="scss" scoped>
+.pageRoute {
+    font-size: 12px;
+    margin-left: 5px;
+}
+</style>

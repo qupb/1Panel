@@ -255,14 +255,14 @@ func (u *ContainerService) ContainerListStats() ([]dto.ContainerListStats, error
 	if err != nil {
 		return nil, err
 	}
-	var datas []dto.ContainerListStats
+	datas := make([]dto.ContainerListStats, len(list))
 	var wg sync.WaitGroup
 	wg.Add(len(list))
 	for i := 0; i < len(list); i++ {
-		go func(item types.Container) {
-			datas = append(datas, loadCpuAndMem(client, item.ID))
+		go func(index int, item types.Container) {
+			datas[index] = loadCpuAndMem(client, item.ID)
 			wg.Done()
-		}(list[i])
+		}(i, list[i])
 	}
 	wg.Wait()
 	return datas, nil
@@ -937,15 +937,27 @@ func calculateCPUPercentUnix(stats *types.StatsJSON) float64 {
 	}
 	return cpuPercent
 }
+
 func calculateMemPercentUnix(memStats types.MemoryStats) float64 {
 	memPercent := 0.0
-	memUsage := float64(memStats.Usage)
-	memLimit := float64(memStats.Limit)
+	memUsage := calculateMemUsageUnixNoCache(memStats)
+	memLimit := memStats.Limit
 	if memUsage > 0.0 && memLimit > 0.0 {
-		memPercent = (memUsage / memLimit) * 100.0
+		memPercent = (float64(memUsage) / float64(memLimit)) * 100.0
 	}
 	return memPercent
 }
+
+func calculateMemUsageUnixNoCache(mem types.MemoryStats) uint64 {
+	if v, isCgroup1 := mem.Stats["total_inactive_file"]; isCgroup1 && v < mem.Usage {
+		return mem.Usage - v
+	}
+	if v := mem.Stats["inactive_file"]; v < mem.Usage {
+		return mem.Usage - v
+	}
+	return mem.Usage
+}
+
 func calculateBlockIO(blkio types.BlkioStats) (blkRead float64, blkWrite float64) {
 	for _, bioEntry := range blkio.IoServiceBytesRecursive {
 		switch strings.ToLower(bioEntry.Op) {
@@ -1063,7 +1075,7 @@ func loadCpuAndMem(client *client.Client, container string) dto.ContainerListSta
 	data.PercpuUsage = len(stats.CPUStats.CPUUsage.PercpuUsage)
 
 	data.MemoryCache = stats.MemoryStats.Stats["cache"]
-	data.MemoryUsage = stats.MemoryStats.Usage
+	data.MemoryUsage = calculateMemUsageUnixNoCache(stats.MemoryStats)
 	data.MemoryLimit = stats.MemoryStats.Limit
 
 	data.MemoryPercent = calculateMemPercentUnix(stats.MemoryStats)
@@ -1183,9 +1195,10 @@ func loadConfigInfo(isCreate bool, req dto.ContainerOperate, oldContainer *types
 	for _, volume := range req.Volumes {
 		if volume.Type == "volume" {
 			hostConf.Mounts = append(hostConf.Mounts, mount.Mount{
-				Type:   mount.Type(volume.Type),
-				Source: volume.SourceDir,
-				Target: volume.ContainerDir,
+				Type:     mount.Type(volume.Type),
+				Source:   volume.SourceDir,
+				Target:   volume.ContainerDir,
+				ReadOnly: volume.Mode == "ro",
 			})
 			config.Volumes[volume.ContainerDir] = struct{}{}
 		} else {
@@ -1262,12 +1275,12 @@ func loadContainerPortForInfo(itemPorts []types.Port) []dto.PortHelper {
 	var exposedPorts []dto.PortHelper
 	samePortMap := make(map[string]dto.PortHelper)
 	ports := transPortToStr(itemPorts)
-	var itemPort dto.PortHelper
 	for _, item := range ports {
 		itemStr := strings.Split(item, "->")
 		if len(itemStr) < 2 {
 			continue
 		}
+		var itemPort dto.PortHelper
 		lastIndex := strings.LastIndex(itemStr[0], ":")
 		if lastIndex == -1 {
 			itemPort.HostPort = itemStr[0]
